@@ -1,4 +1,5 @@
-import config as c
+import models.config as c
+from models.config import *
 
 class LinkBudget:
 
@@ -10,7 +11,7 @@ class LinkBudget:
         self.tx_cable_loss_db = c.TX_CABLE_LOSS
         self.tx_connector_loss_db = c.TX_CONNECTOR_LOSS
 
-        # Environment
+        # Environment losses
         self.shadow_fading_db = c.SHADOW_FADING
         self.rain_attenuation_db = c.RAIN_ATTENUATION
         self.misc_loss_db = c.MISC_LOSS
@@ -18,9 +19,6 @@ class LinkBudget:
         # Receiver
         self.rx_antenna_gain_dbi = c.RX_ANTENNA_GAIN
         self.rx_cable_loss_db = c.RX_CABLE_LOSS
-
-        # Frequency (MHz)
-        self.frequency_mhz = c.DEFAULT_FREQUENCY
 
     def total_losses(self, path_loss_db):
 

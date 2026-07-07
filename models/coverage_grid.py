@@ -33,7 +33,12 @@ def compute_coverage(grid, tower, link_budget):
             ((lat - tower["lat"]) ** 2 + (lon - tower["lon"]) ** 2) ** 0.5
         ) * 111  # approx km conversion
 
-        rsrp = calculate_rsrp(distance_km, link_budget)
+        rsrp = calculate_rsrp(
+            distance_km,
+            link_budget,
+            tx_power_dbm=tower.get("power"),
+            frequency_mhz=tower.get("freq")
+        )
 
         results.append((lat, lon, rsrp))
 

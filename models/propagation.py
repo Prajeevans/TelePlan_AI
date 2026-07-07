@@ -8,7 +8,7 @@ class PropagationModel(ABC):
     """
 
     @abstractmethod
-    def path_loss(self, distance_km: float, frequency_mhz: float) -> float:
+    def path_loss(self, distance_km: float, frequency_mhz: float, **kwargs) -> float:
         """
         Returns path loss in dB.
         """
@@ -32,7 +32,7 @@ class FreeSpacePropagation(PropagationModel):
     - No atmospheric losses
     """
 
-    def path_loss(self, distance_km: float, frequency_mhz: float) -> float:
+    def path_loss(self, distance_km: float, frequency_mhz: float, **kwargs) -> float:
 
         if distance_km <= 0:
             distance_km = 0.001
@@ -56,12 +56,16 @@ class OkumuraHataPropagation(PropagationModel):
         self.mobile_height = mobile_height
         self.environment = environment.lower()
 
-    def path_loss(self, distance_km, frequency_mhz):
-
+    def path_loss(self, distance_km, frequency_mhz, base_height=None, **kwargs):
+        if frequency_mhz < 150 or frequency_mhz > 1500:
+            raise ValueError(
+                "Okumura-Hata model is valid only for 150-1500 MHz"
+            )
+            
         if distance_km <= 0:
             distance_km = 0.001
 
-        hb = self.base_height
+        hb = base_height if base_height is not None else self.base_height
         hm = self.mobile_height
         f = frequency_mhz
         d = distance_km
@@ -106,5 +110,5 @@ class COST231Propagation(PropagationModel):
     Will be implemented later.
     """
 
-    def path_loss(self, distance_km: float, frequency_mhz: float) -> float:
+    def path_loss(self, distance_km: float, frequency_mhz: float, **kwargs) -> float:
         raise NotImplementedError("COST-231 model not implemented yet.")

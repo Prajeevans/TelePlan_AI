@@ -34,11 +34,13 @@ class CoverageEngine:
 
                 path_loss = self.propagation.path_loss(
                     distance,
-                    tower["freq"]
+                    tower["freq"],
+                    base_height=tower.get("height")
                 )
 
                 rx_power = self.link_budget.received_power(
-                    path_loss
+                    path_loss,
+                    tx_power_dbm=tower.get("power")
                 )
                 quality, color = signal_quality(rx_power)
                 results.append({
@@ -55,5 +57,21 @@ class CoverageEngine:
                     "quality": quality,
                     "color": color
                 })
-
         return results
+
+    def predict_network(self, towers):
+        """
+        Predict coverage for multiple towers.
+        """
+        network_results = []
+
+        for tower in towers:
+
+            tower_results = self.predict(tower)
+
+            network_results.append({
+                "tower_id": tower["id"],
+                "results": tower_results
+            })
+
+        return network_results
